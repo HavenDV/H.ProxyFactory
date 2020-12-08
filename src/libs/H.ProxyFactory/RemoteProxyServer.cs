@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using H.Utilities.Extensions;
@@ -20,8 +21,8 @@ namespace H.Utilities
         private IConnection Connection { get; }
 
         private List<Assembly> Assemblies { get; } = AppDomain.CurrentDomain.GetAssemblies().ToList();
-        private List<Assembly> LoadedAssemblies { get; } = new List<Assembly>();
-        private Dictionary<Guid, object> ObjectsDictionary { get; } = new Dictionary<Guid, object>();
+        private List<Assembly> LoadedAssemblies { get; } = new ();
+        private Dictionary<Guid, object> ObjectsDictionary { get; } = new ();
 
         #endregion
 
@@ -58,11 +59,11 @@ namespace H.Utilities
         public RemoteProxyServer(IConnection connection)
         {
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            Connection.MessageReceived += async (sender, message) =>
+            Connection.MessageReceived += async (_, message) =>
             {
                 await OnMessageReceivedAsync(message);
             };
-            Connection.ExceptionOccurred += (sender, exception) =>
+            Connection.ExceptionOccurred += (_, exception) =>
             {
                 OnExceptionOccurred(exception);
             };
@@ -233,6 +234,16 @@ namespace H.Utilities
                            ?? throw new InvalidOperationException($"Assembly with type \"{typeName}\" is not loaded");
             var instance = assembly.CreateInstance(typeName) ?? throw new InvalidOperationException("Instance is null");
             
+            AddObject(guid, instance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="instance"></param>
+        public void AddObject(Guid guid, object instance)
+        {
             foreach (var eventInfo in instance.GetType().GetEvents())
             {
                 instance.SubscribeToEvent(eventInfo.Name, async (name, args) =>
@@ -341,6 +352,16 @@ namespace H.Utilities
             try
             {
                 await Connection.SendAsync($"{connectionPrefix}out", value, cancellationTokenSource.Token);
+            }
+            catch (SerializationException) when (value != null)
+            {
+                var guid = Guid.NewGuid();
+                AddObject(guid, value);
+                
+                await Connection.SendAsync($"{connectionPrefix}out", new CreateObjectMessage
+                {
+                    Guid = guid,
+                }, cancellationTokenSource.Token);
             }
             catch (Exception exception)
             {

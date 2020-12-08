@@ -20,14 +20,28 @@ namespace H.ProxyFactory.Pipes.UnitTests
 
             await BaseTests.BaseInstanceTestAsync<IMethodsClass>(
                 GetFullName(typeof(MethodsClass)),
-                (instance, _) =>
+                async (instance, cancellationToken) =>
                 {
                     Assert.AreEqual(123, instance.Echo(123));
                     Assert.AreEqual("Hello 123", instance.HelloName("123"));
                     CollectionAssert.AreEqual(new [] { 1, 2, 3 }, instance.IntegerCollection123().ToArray());
                     CollectionAssert.AreEqual(new[] { "1", "2", "3" }, instance.StringCollection123().ToArray());
 
-                    return Task.CompletedTask;
+                    var eventClass = instance.GetEventClass();
+                    Assert.IsNotNull(eventClass);
+
+                    eventClass.Event1 += (_, value) =>
+                    {
+                        Console.WriteLine($"Hello, I'm the Event1. My value is {value}");
+                    };
+                    
+                    var event1Value = await eventClass.WaitEventAsync<int>(_ =>
+                    {
+                        eventClass.RaiseEvent1();
+
+                        return Task.CompletedTask;
+                    }, nameof(eventClass.Event1), cancellationToken);
+                    Assert.AreEqual(777, event1Value);
                 },
                 cancellationTokenSource.Token);
         }

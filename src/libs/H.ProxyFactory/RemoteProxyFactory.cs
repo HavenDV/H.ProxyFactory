@@ -20,12 +20,12 @@ namespace H.Utilities
         /// <summary>
         /// 
         /// </summary>
-        public List<string> LoadedAssemblies { get; } = new List<string>();
+        public List<string> LoadedAssemblies { get; } = new ();
 
         private IConnection Connection { get; }
-        private EmptyProxyFactory EmptyProxyFactory { get; } = new EmptyProxyFactory();
-        private Dictionary<object, Guid> GuidDictionary { get; } = new Dictionary<object, Guid>();
-        private Dictionary<Guid, object> ObjectsDictionary { get; } = new Dictionary<Guid, object>();
+        private EmptyProxyFactory EmptyProxyFactory { get; } = new ();
+        private Dictionary<object, Guid> GuidDictionary { get; } = new ();
+        private Dictionary<Guid, object> ObjectsDictionary { get; } = new ();
 
         #endregion
 
@@ -77,8 +77,8 @@ namespace H.Utilities
         public RemoteProxyFactory(IConnection connection)
         {
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            Connection.MessageReceived += async (sender, message) => await OnMessageReceived(message);
-            Connection.ExceptionOccurred += (sender, exception) => OnExceptionOccurred(exception);
+            Connection.MessageReceived += async (_, message) => await OnMessageReceived(message);
+            Connection.ExceptionOccurred += (_, exception) => OnExceptionOccurred(exception);
 
             EmptyProxyFactory.AsyncMethodCalled += async (sender, args) =>
             {
@@ -106,8 +106,8 @@ namespace H.Utilities
 
                 MethodCompleted?.Invoke(sender, args);
             };
-            EmptyProxyFactory.EventRaised += (sender, args) => EventRaised?.Invoke(this, args);
-            EmptyProxyFactory.EventCompleted += (sender, args) => EventCompleted?.Invoke(this, args);
+            EmptyProxyFactory.EventRaised += (_, args) => EventRaised?.Invoke(this, args);
+            EmptyProxyFactory.EventCompleted += (_, args) => EventCompleted?.Invoke(this, args);
         }
 
         #endregion
@@ -277,6 +277,15 @@ namespace H.Utilities
                 }));
 
             var value = await Connection.ReceiveAsync<object?>($"{message.ConnectionPrefix}out", token);
+            if (value is CreateObjectMessage createObjectMessage)
+            {
+                value = EmptyProxyFactory.CreateInstance(methodInfo.ReturnType);
+                
+                var guid = createObjectMessage.Guid ?? throw new InvalidOperationException("Guid is null");
+                
+                ObjectsDictionary.Add(guid, value);
+                GuidDictionary.Add(value, guid);
+            }
             if (value is Exception exception)
             {
                 throw exception;

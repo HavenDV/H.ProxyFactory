@@ -44,6 +44,7 @@ namespace H.ProxyFactory.TestTypes
         string HelloName(string input);
         ICollection<int> IntegerCollection123();
         ICollection<string> StringCollection123();
+        IEventsClass GetEventClass();
     }
 
     public class MethodsClass : IMethodsClass
@@ -71,6 +72,11 @@ namespace H.ProxyFactory.TestTypes
                 { "2", null },
                 { "3", null },
             }.Keys;
+        }
+
+        public IEventsClass GetEventClass()
+        {
+            return new EventsClass();
         }
     }
 

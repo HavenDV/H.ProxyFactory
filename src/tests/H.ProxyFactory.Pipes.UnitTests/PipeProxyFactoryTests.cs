@@ -47,6 +47,11 @@ namespace H.ProxyFactory.Pipes.UnitTests
                             $"{nameof(instance.RawDataReceived)}: {args.RawData?.Count ?? 0}, {args.WavData?.Count ?? 0}");
                     };
                     await instance.InitializeAsync(cancellationToken);
+
+                    if (!NAudioRecorder.GetAvailableDevices().Any())
+                    {
+                        return;
+                    }
                     
                     await instance.StartAsync(cancellationToken);
 

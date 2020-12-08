@@ -56,6 +56,21 @@ namespace H.Utilities
 
         #endregion
 
+        #region Private methods
+
+        private static IPipeClient<T> CreateClient<T>(string name)
+        {
+            return new SingleConnectionPipeClient<T>(name);
+        }
+        
+        private static IPipeServer<T> CreateServer<T>(string name)
+        {
+            return new SingleConnectionPipeServer<T>(name);
+        }
+
+        #endregion
+
+
         #region Public methods
 
         /// <summary>
@@ -68,9 +83,9 @@ namespace H.Utilities
         {
             if (IsFactory)
             {
-                var client = new SingleConnectionPipeClient<Message>(name);
-                client.MessageReceived += (sender, args) => OnMessageReceived(args.Message);
-                client.ExceptionOccurred += (sender, args) => OnExceptionOccurred(args.Exception);
+                var client = CreateClient<Message>(name);
+                client.MessageReceived += (_, args) => OnMessageReceived(args.Message);
+                client.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);
 
                 await client.ConnectAsync(cancellationToken).ConfigureAwait(false);
 
@@ -78,11 +93,11 @@ namespace H.Utilities
             }
             else
             {
-                var server = new SingleConnectionPipeServer<Message>(name);
-                server.MessageReceived += (sender, args) => OnMessageReceived(args.Message);
-                server.ExceptionOccurred += (sender, args) => OnExceptionOccurred(args.Exception);
+                var server = CreateServer<Message>(name);
+                server.MessageReceived += (_, args) => OnMessageReceived(args.Message);
+                server.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);
 
-                await server.StartAsync(cancellationToken: cancellationToken);
+                await server.StartAsync(cancellationToken);
 
                 InternalConnection = server;
             }
@@ -111,7 +126,7 @@ namespace H.Utilities
         /// <returns></returns>
         public async Task SendAsync<T>(string name, T value, CancellationToken cancellationToken = default)
         {
-            await using var client = new SingleConnectionPipeClient<object?>(name);
+            await using var client = CreateClient<object?>(name);
             client.ExceptionOccurred += (_, eventArgs) =>
             {
                 OnExceptionOccurred(eventArgs.Exception);
@@ -131,14 +146,14 @@ namespace H.Utilities
         /// <returns></returns>
         public async Task<T> ReceiveAsync<T>(string name, CancellationToken cancellationToken = default)
         {
-            await using var server = new SingleConnectionPipeServer<T>(name);
+            await using var server = CreateServer<T>(name);
             server.ExceptionOccurred += (_, eventArgs) =>
             {
                 OnExceptionOccurred(eventArgs.Exception);
             };
 
             var args = await server.WaitMessageAsync(
-                async token => await server.StartAsync(cancellationToken: token),
+                async token => await server.StartAsync(token),
                 cancellationToken);
 
             return args.Message;

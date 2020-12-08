@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.6.9.1</Version>
+    <Version>0.7.1</Version>
     <Description>
       Features:
       - Create proxy objects that look exactly like the original objects

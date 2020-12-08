@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="H.Core" Version="0.9.3" />
+    <PackageReference Include="H.Recorders.NAudioRecorder" Version="0.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libs\H.ProxyFactory.Pipes\H.ProxyFactory.Pipes.csproj" />
   </ItemGroup>
   

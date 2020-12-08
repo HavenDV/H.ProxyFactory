@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using H.Utilities.Tests.Extensions;
+using H.Core;
+using H.ProxyFactory.Pipes.UnitTests.Extensions;
+using H.Recorders;
+using H.Utilities.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.Pipes.UnitTests
 {
     [TestClass]
     public class PipeProxyFactoryTests
@@ -17,7 +20,7 @@ namespace H.Utilities.Tests
 
             await BaseTests.BaseInstanceTestAsync<IMethodsClass>(
                 GetFullName(typeof(MethodsClass)),
-                (instance, cancellationToken) =>
+                (instance, _) =>
                 {
                     Assert.AreEqual(123, instance.Echo(123));
                     Assert.AreEqual("Hello 123", instance.HelloName("123"));
@@ -25,6 +28,20 @@ namespace H.Utilities.Tests
                     CollectionAssert.AreEqual(new[] { "1", "2", "3" }, instance.StringCollection123().ToArray());
 
                     return Task.CompletedTask;
+                },
+                cancellationTokenSource.Token);
+        }
+        
+        [TestMethod]
+        public async Task RecorderTest()
+        {
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            await BaseTests.BaseInstanceTestAsync<IRecorder>(
+                GetFullName(typeof(NAudioRecorder)),
+                async (instance, cancellationToken) =>
+                {
+                    await instance.InitializeAsync(cancellationToken);
                 },
                 cancellationTokenSource.Token);
         }
@@ -38,7 +55,7 @@ namespace H.Utilities.Tests
                 GetFullName(typeof(EventsClass)),
                 async (instance, cancellationToken) =>
                 {
-                    instance.Event1 += (sender, value) =>
+                    instance.Event1 += (_, value) =>
                     {
                         Console.WriteLine($"Hello, I'm the Event1. My value is {value}");
                     };
@@ -47,7 +64,7 @@ namespace H.Utilities.Tests
                         Console.WriteLine($"Hello, I'm the Event3. My value is {value}");
                     };
 
-                    var event1Value = await instance.WaitEventAsync<int>(token =>
+                    var event1Value = await instance.WaitEventAsync<int>(_ =>
                     {
                         instance.RaiseEvent1();
 
@@ -55,7 +72,7 @@ namespace H.Utilities.Tests
                     }, nameof(instance.Event1), cancellationToken);
                     Assert.AreEqual(777, event1Value);
 
-                    var event2Values = await instance.WaitEventAsync(token =>
+                    var event2Values = await instance.WaitEventAsync(_ =>
                     {
                         instance.RaiseEvent3();
 

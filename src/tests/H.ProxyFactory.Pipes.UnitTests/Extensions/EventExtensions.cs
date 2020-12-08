@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace H.Utilities.Tests.Extensions
+namespace H.ProxyFactory.Pipes.UnitTests.Extensions
 {
     /// <summary>
     /// Extensions that work with <see langword="event"/> <br/>

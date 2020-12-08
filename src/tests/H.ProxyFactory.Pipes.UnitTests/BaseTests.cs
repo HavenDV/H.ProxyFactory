@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Utilities;
+using H.Utilities.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.Pipes.UnitTests
 {
     public static class BaseTests
     {
@@ -13,8 +15,8 @@ namespace H.Utilities.Tests
             var receivedException = (Exception?)null;
             using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             await using var factory = new PipeProxyFactory();
-            factory.MethodCalled += (sender, args) => args.CancellationToken = cancellationToken;
-            factory.ExceptionOccurred += (sender, exception) =>
+            factory.MethodCalled += (_, args) => args.CancellationToken = cancellationToken;
+            factory.ExceptionOccurred += (_, exception) =>
             {
                 Console.WriteLine($"factory.ExceptionOccurred: {exception}");
                 receivedException = exception;
@@ -29,7 +31,7 @@ namespace H.Utilities.Tests
                 }
             };
             await using var server = new PipeProxyServer();
-            server.ExceptionOccurred += (sender, exception) =>
+            server.ExceptionOccurred += (_, exception) =>
             {
                 Console.WriteLine($"target.ExceptionOccurred: {exception}");
                 receivedException = exception;

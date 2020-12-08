@@ -318,17 +318,18 @@ namespace H.Utilities
                     await task;
 
                     var type = value.GetType();
-                    var taskTypeName = type.BaseType?.GenericTypeArguments?.FirstOrDefault()?.FullName;
-                    if (taskTypeName != "System.Threading.Tasks.VoidTaskResult")
+                    var taskTypeName = type.BaseType?.GenericTypeArguments?.FirstOrDefault()?.FullName 
+                        ?? type.GenericTypeArguments?.FirstOrDefault()?.FullName;
+                    if (taskTypeName == "System.Threading.Tasks.VoidTaskResult")
+                    {
+                        value = null;
+                    }
+                    else
                     {
                         value = value
                             .GetType()
                             .GetProperty(nameof(Task<int>.Result), BindingFlags.Public | BindingFlags.Instance)?
                             .GetValue(value);
-                    }
-                    else
-                    {
-                        value = null;
                     }
                 }
                 catch (Exception exception)

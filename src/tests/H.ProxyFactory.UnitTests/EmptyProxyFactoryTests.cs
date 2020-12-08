@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using H.ProxyFactory.TestTypes;
 using H.Utilities.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

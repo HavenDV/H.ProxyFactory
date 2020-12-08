@@ -35,13 +35,24 @@ namespace H.ProxyFactory.Pipes.UnitTests
         [TestMethod]
         public async Task RecorderTest()
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             await BaseTests.BaseInstanceTestAsync<IRecorder>(
                 GetFullName(typeof(NAudioRecorder)),
                 async (instance, cancellationToken) =>
                 {
+                    instance.RawDataReceived += (_, args) =>
+                    {
+                        Console.WriteLine(
+                            $"{nameof(instance.RawDataReceived)}: {args.RawData?.Count ?? 0}, {args.WavData?.Count ?? 0}");
+                    };
                     await instance.InitializeAsync(cancellationToken);
+                    
+                    await instance.StartAsync(cancellationToken);
+
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+
+                    await instance.StopAsync(cancellationToken);
                 },
                 cancellationTokenSource.Token);
         }

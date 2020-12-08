@@ -39,8 +39,10 @@ namespace H.ProxyFactory.Pipes.UnitTests
                 cancellationTokenSource.Cancel();
             };
 
-            await server.InitializeAsync(nameof(PipeProxyFactoryTests), cancellationTokenSource.Token);
-            await factory.InitializeAsync(nameof(PipeProxyFactoryTests), cancellationTokenSource.Token);
+            var random = new Random();
+            var name = nameof(PipeProxyFactoryTests) + random.Next();
+            await server.InitializeAsync(name, cancellationTokenSource.Token);
+            await factory.InitializeAsync(name, cancellationTokenSource.Token);
 
             var instance = await factory.CreateInstanceAsync<T>(typeName, cancellationTokenSource.Token);
 

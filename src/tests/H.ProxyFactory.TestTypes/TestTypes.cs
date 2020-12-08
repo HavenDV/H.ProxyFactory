@@ -89,6 +89,7 @@ namespace H.ProxyFactory.TestTypes
         Task NoValueTaskAsync(CancellationToken cancellationToken = default);
         Task<int> ValueTypeResultTaskWithResultEquals1Async(CancellationToken cancellationToken = default);
         Task InvalidOperationExceptionAfterSecondTaskAsync(CancellationToken cancellationToken = default);
+        Task<IEventsClass> GetEventClassAsync(CancellationToken cancellationToken = default);
     }
 
     public class AsyncMethodsClass : IAsyncMethodsClass
@@ -110,6 +111,11 @@ namespace H.ProxyFactory.TestTypes
             await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
             throw new InvalidOperationException("Custom exception message");
+        }
+
+        public Task<IEventsClass> GetEventClassAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<IEventsClass>(new EventsClass());
         }
     }
 

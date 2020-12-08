@@ -130,6 +130,22 @@ namespace H.ProxyFactory.Pipes.UnitTests
 
                     await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
                         await instance.InvalidOperationExceptionAfterSecondTaskAsync(cancellationToken));
+
+                    var eventClass = await instance.GetEventClassAsync(cancellationToken);
+                    Assert.IsNotNull(eventClass);
+
+                    eventClass.Event1 += (_, value) =>
+                    {
+                        Console.WriteLine($"Hello, I'm the Event1. My value is {value}");
+                    };
+
+                    var event1Value = await eventClass.WaitEventAsync<int>(_ =>
+                    {
+                        eventClass.RaiseEvent1();
+
+                        return Task.CompletedTask;
+                    }, nameof(eventClass.Event1), cancellationToken);
+                    Assert.AreEqual(777, event1Value);
                 },
                 cancellationTokenSource.Token);
         }

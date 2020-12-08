@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.7.2</Version>
+    <Version>0.7.3</Version>
     <Description>
       Features:
       - Create proxy objects that look exactly like the original objects
     </Description>
     <PackageTags>proxy objects, empty proxy, direct proxy, log method calls</PackageTags>
-    <PackageReleaseNotes>Added support for returning interface type values from methods.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for returning interface type values(include Tasks) from methods.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

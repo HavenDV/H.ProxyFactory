@@ -279,19 +279,29 @@ namespace H.Utilities
             var value = await Connection.ReceiveAsync<object?>($"{message.ConnectionPrefix}out", token);
             if (value is CreateObjectMessage createObjectMessage)
             {
-                value = EmptyProxyFactory.CreateInstance(methodInfo.ReturnType);
-                
                 var guid = createObjectMessage.Guid ?? throw new InvalidOperationException("Guid is null");
                 
-                ObjectsDictionary.Add(guid, value);
-                GuidDictionary.Add(value, guid);
+                return GetReturnObject(methodInfo.ReturnType,
+                    actualType =>
+                    {
+                        var obj = EmptyProxyFactory.CreateInstance(actualType);
+                        
+                        ObjectsDictionary.Add(guid, obj);
+                        GuidDictionary.Add(obj, guid);
+
+                        return obj;
+                    });
             }
             if (value is Exception exception)
             {
                 throw exception;
             }
 
-            var type = methodInfo.ReturnType;
+            return GetReturnObject(methodInfo.ReturnType, _ => value);
+        }
+
+        private static object? GetReturnObject(Type type, Func<Type, object?> func)
+        {
             if (type == typeof(Task))
             {
                 return Task.CompletedTask;
@@ -300,13 +310,13 @@ namespace H.Utilities
             {
                 var taskType = type.GenericTypeArguments.FirstOrDefault()
                                ?? throw new InvalidOperationException("Task type is null");
-
+                
                 return typeof(Task).GetMethodInfo(nameof(Task.FromResult))
                     .MakeGenericMethod(taskType)
-                    .Invoke(null, new[] { value });
+                    .Invoke(null, new[] { func(taskType) });
             }
-
-            return value;
+            
+            return func(type);
         }
 
         private async Task OnMessageReceived(Message message)

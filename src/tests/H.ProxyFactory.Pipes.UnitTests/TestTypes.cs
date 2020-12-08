@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.Pipes.UnitTests
 {
     #region Events
 

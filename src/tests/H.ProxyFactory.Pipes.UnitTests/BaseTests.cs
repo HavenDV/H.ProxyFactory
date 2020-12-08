@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using H.Utilities;
-using H.Utilities.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.ProxyFactory.Pipes.UnitTests

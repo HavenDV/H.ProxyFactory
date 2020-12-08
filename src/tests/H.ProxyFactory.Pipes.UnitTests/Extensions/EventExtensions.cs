@@ -45,7 +45,7 @@ namespace H.ProxyFactory.Pipes.UnitTests.Extensions
                             ?? throw new ArgumentException($"Event \"{eventName}\" is not found");
 
             var taskCompletionSource = new TaskCompletionSource<T>();
-            await using var registration = cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
+            using var registration = cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
 
             var waitObject = new WaitObject<T>
             {
@@ -141,7 +141,7 @@ namespace H.ProxyFactory.Pipes.UnitTests.Extensions
                 parameters);
             var @delegate = handlerExpression.Compile();
 
-            await using var registration = cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
+            using var registration = cancellationToken.Register(() => taskCompletionSource.TrySetCanceled());
 
             try
             {

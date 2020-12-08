@@ -109,12 +109,12 @@ namespace H.Utilities.Tests
             }
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             CancellationTokenSource.Cancel();
             CancellationTokenSource.Dispose();
-
-            return ValueTask.CompletedTask;
+            
+            await Task.CompletedTask;
         }
 
         #endregion

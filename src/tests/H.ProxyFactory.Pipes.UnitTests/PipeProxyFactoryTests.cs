@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using H.Core;
 using H.ProxyFactory.Pipes.UnitTests.Extensions;
 using H.Recorders;
-using H.Utilities.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.ProxyFactory.Pipes.UnitTests

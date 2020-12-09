@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.7.3</Version>
+    <Version>0.7.3.2</Version>
     <Description>
       Features:
       - Create proxy objects that look exactly like the original objects
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Pipes" Version="1.14.5" />
+    <PackageReference Include="H.Pipes" Version="1.14.6" />
   </ItemGroup>
 
   <ItemGroup>

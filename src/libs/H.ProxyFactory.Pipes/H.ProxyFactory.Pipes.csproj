@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net4.6.1</TargetFrameworks>
     <RootNamespace>H.ProxyFactory</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.7.3.2</Version>
+    <Version>0.7.4</Version>
     <Description>
       Features:
       - Create proxy objects that look exactly like the original objects
       - Proxy target can be located anywhere where there is access to pipes
     </Description>
     <PackageTags>proxy objects, direct proxy, pipe proxy</PackageTags>
-    <PackageReleaseNotes>Added support for returning interface type values(include Tasks) from methods.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated target frameworks.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

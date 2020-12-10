@@ -84,7 +84,16 @@ namespace H.Utilities
             if (IsFactory)
             {
                 var client = CreateClient<Message>(name);
-                client.MessageReceived += (_, args) => OnMessageReceived(args.Message);
+                client.MessageReceived += (_, args) =>
+                {
+                    if (args.Message == null)
+                    {
+                        OnExceptionOccurred(new InvalidOperationException("Received null message from server."));
+                        return;
+                    }
+                    
+                    OnMessageReceived(args.Message);
+                };
                 client.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);
 
                 await client.ConnectAsync(cancellationToken).ConfigureAwait(false);
@@ -94,7 +103,16 @@ namespace H.Utilities
             else
             {
                 var server = CreateServer<Message>(name);
-                server.MessageReceived += (_, args) => OnMessageReceived(args.Message);
+                server.MessageReceived += (_, args) =>
+                {
+                    if (args.Message == null)
+                    {
+                        OnExceptionOccurred(new InvalidOperationException("Received null message from client."));
+                        return;
+                    }
+
+                    OnMessageReceived(args.Message);
+                };
                 server.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);
 
                 await server.StartAsync(cancellationToken);

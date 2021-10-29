@@ -15,7 +15,7 @@ public class RemoteProxyFactory : IAsyncDisposable
     /// <summary>
     /// 
     /// </summary>
-    public List<string> LoadedAssemblies { get; } = new();
+    public ICollection<string> LoadedAssemblies { get; } = new List<string>();
 
     private IConnection Connection { get; }
     private EmptyProxyFactory EmptyProxyFactory { get; } = new();
@@ -72,7 +72,7 @@ public class RemoteProxyFactory : IAsyncDisposable
     public RemoteProxyFactory(IConnection connection)
     {
         Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-        Connection.MessageReceived += async (_, message) => await OnMessageReceived(message);
+        Connection.MessageReceived += async (_, message) => await OnMessageReceived(message).ConfigureAwait(false);
         Connection.ExceptionOccurred += (_, exception) => OnExceptionOccurred(exception);
 
         EmptyProxyFactory.AsyncMethodCalled += async (sender, args) =>
@@ -117,7 +117,7 @@ public class RemoteProxyFactory : IAsyncDisposable
     /// <returns></returns>
     public async Task InitializeAsync(string name, CancellationToken cancellationToken = default)
     {
-        await Connection.InitializeAsync(name, cancellationToken);
+        await Connection.InitializeAsync(name, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -131,7 +131,7 @@ public class RemoteProxyFactory : IAsyncDisposable
         await Connection.SendMessageAsync(new GetTypesMessage(), cancellationToken)
             .ConfigureAwait(false);
 
-        var value = await Connection.ReceiveAsync<object?>("GetTypes", cancellationToken);
+        var value = await Connection.ReceiveAsync<object?>("GetTypes", cancellationToken).ConfigureAwait(false);
 
         return value switch
         {
@@ -197,7 +197,7 @@ public class RemoteProxyFactory : IAsyncDisposable
         where TBase : class
         where TInterface : class
     {
-        return await CreateInstanceAsync<TInterface>(typeof(TBase).FullName, cancellationToken);
+        return await CreateInstanceAsync<TInterface>(typeof(TBase).FullName, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -205,7 +205,9 @@ public class RemoteProxyFactory : IAsyncDisposable
     /// </summary>
     public async ValueTask DisposeAsync()
     {
-        await Connection.DisposeAsync();
+        GC.SuppressFinalize(this);
+
+        await Connection.DisposeAsync().ConfigureAwait(false);
     }
 
     #endregion
@@ -249,7 +251,7 @@ public class RemoteProxyFactory : IAsyncDisposable
                     ObjectGuid = message.ObjectGuid,
                     MethodGuid = message.MethodGuid,
                     MethodName = message.MethodName,
-                }, source.Token);
+                }, source.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -268,10 +270,10 @@ public class RemoteProxyFactory : IAsyncDisposable
                     return;
                 }
 
-                await Connection.SendAsync($"{message.ConnectionPrefix}{i}", arg, token);
-            }));
+                await Connection.SendAsync($"{message.ConnectionPrefix}{i}", arg, token).ConfigureAwait(false);
+            })).ConfigureAwait(false);
 
-        var value = await Connection.ReceiveAsync<object?>($"{message.ConnectionPrefix}out", token);
+        var value = await Connection.ReceiveAsync<object?>($"{message.ConnectionPrefix}out", token).ConfigureAwait(false);
         if (value is CreateObjectMessage createObjectMessage)
         {
             var guid = createObjectMessage.Guid ?? throw new InvalidOperationException("Guid is null");
@@ -319,7 +321,7 @@ public class RemoteProxyFactory : IAsyncDisposable
         try
         {
             message = message ?? throw new ArgumentNullException(nameof(message));
-            message.Text = message.Text ?? throw new ArgumentNullException($"{nameof(message.Text)}");
+            message.Text = message.Text ?? throw new ArgumentNullException(nameof(message.Text));
 
             MessageReceived?.Invoke(this, message.Text);
 
@@ -334,7 +336,7 @@ public class RemoteProxyFactory : IAsyncDisposable
                     var objectGuid = o.ObjectGuid ?? throw new ArgumentNullException(nameof(o.ObjectGuid));
                     var eventName = o.EventName ?? throw new ArgumentNullException(nameof(o.EventName));
                     var connectionName = o.ConnectionName ?? throw new ArgumentNullException(nameof(o.ConnectionName));
-                    await RaiseEventAsync(objectGuid, eventName, connectionName);
+                    await RaiseEventAsync(objectGuid, eventName, connectionName).ConfigureAwait(false);
                     break;
             }
         }
@@ -346,7 +348,7 @@ public class RemoteProxyFactory : IAsyncDisposable
 
     private async Task RaiseEventAsync(Guid objectGuid, string eventName, string connectionName, CancellationToken cancellationToken = default)
     {
-        var args = await Connection.ReceiveAsync<object?[]>(connectionName, cancellationToken);
+        var args = await Connection.ReceiveAsync<object?[]>(connectionName, cancellationToken).ConfigureAwait(false);
         var instance = ObjectsDictionary[objectGuid];
 
         instance.RaiseEvent(eventName, args);

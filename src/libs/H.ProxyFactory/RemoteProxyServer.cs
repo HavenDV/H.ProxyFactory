@@ -56,7 +56,7 @@ public class RemoteProxyServer : IAsyncDisposable
         Connection = connection ?? throw new ArgumentNullException(nameof(connection));
         Connection.MessageReceived += async (_, message) =>
         {
-            await OnMessageReceivedAsync(message);
+            await OnMessageReceivedAsync(message).ConfigureAwait(false);
         };
         Connection.ExceptionOccurred += (_, exception) =>
         {
@@ -74,7 +74,7 @@ public class RemoteProxyServer : IAsyncDisposable
     /// <returns></returns>
     public async Task InitializeAsync(string name, CancellationToken cancellationToken = default)
     {
-        await Connection.InitializeAsync(name, cancellationToken);
+        await Connection.InitializeAsync(name, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -99,12 +99,14 @@ public class RemoteProxyServer : IAsyncDisposable
     /// <returns></returns>
     public async Task SendExceptionAsync(Exception factoryException, CancellationToken cancellationToken = default)
     {
+        factoryException = factoryException ?? throw new ArgumentNullException(nameof(factoryException));
+
         try
         {
             await Connection.SendMessageAsync(new ExceptionMessage
             {
                 Exception = CreateSerializableException(factoryException),
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -122,9 +124,9 @@ public class RemoteProxyServer : IAsyncDisposable
             EventName = eventName,
             EventGuid = eventGuid,
         };
-        await Connection.SendMessageAsync(message, cancellationToken);
+        await Connection.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
 
-        await Connection.SendAsync(message.ConnectionName, args, cancellationToken);
+        await Connection.SendAsync(message.ConnectionName, args, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task OnMessageReceivedAsync(Message message)
@@ -144,7 +146,7 @@ public class RemoteProxyServer : IAsyncDisposable
                     break;
 
                 case GetTypesMessage _:
-                    await GetTypesAsync();
+                    await GetTypesAsync().ConfigureAwait(false);
                     break;
 
                 case CreateObjectMessage o:
@@ -158,13 +160,13 @@ public class RemoteProxyServer : IAsyncDisposable
                     var methodName = o.MethodName ?? throw new ArgumentNullException(nameof(o.MethodName));
                     var methodGuid = o.MethodGuid ?? throw new ArgumentNullException(nameof(o.MethodGuid));
                     var connectionPrefix = o.ConnectionPrefix ?? throw new ArgumentNullException(nameof(o.ConnectionPrefix));
-                    await RunMethodAsync(objectGuid, methodName, methodGuid, connectionPrefix);
+                    await RunMethodAsync(objectGuid, methodName, methodGuid, connectionPrefix).ConfigureAwait(false);
                     break;
             }
         }
         catch (Exception exception)
         {
-            await SendExceptionAsync(exception);
+            await SendExceptionAsync(exception).ConfigureAwait(false);
         }
     }
 
@@ -205,13 +207,13 @@ public class RemoteProxyServer : IAsyncDisposable
 
         try
         {
-            await Connection.SendAsync("GetTypes", value, cancellationToken);
+            await Connection.SendAsync("GetTypes", value, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
             value = CreateSerializableException(exception);
 
-            await Connection.SendAsync("GetTypes", value, cancellationToken);
+            await Connection.SendAsync("GetTypes", value, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -239,6 +241,8 @@ public class RemoteProxyServer : IAsyncDisposable
     /// <param name="instance"></param>
     public void AddObject(Guid guid, object instance)
     {
+        instance = instance ?? throw new ArgumentNullException(nameof(instance));
+
         foreach (var eventInfo in instance.GetType().GetEvents())
         {
             instance.SubscribeToEvent(eventInfo.Name, async (name, args) =>
@@ -250,11 +254,11 @@ public class RemoteProxyServer : IAsyncDisposable
                         args[0] = null;
                     }
 
-                    await OnEventOccurredAsync(guid, name, Guid.NewGuid(), args);
+                    await OnEventOccurredAsync(guid, name, Guid.NewGuid(), args).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
-                    await SendExceptionAsync(exception);
+                    await SendExceptionAsync(exception).ConfigureAwait(false);
                 }
             });
         }
@@ -287,8 +291,8 @@ public class RemoteProxyServer : IAsyncDisposable
                 }
 
                     // ReSharper disable once AccessToDisposedClosure
-                    return await Connection.ReceiveAsync<object?>($"{connectionPrefix}{i}", cancellationTokenSource.Token);
-            }));
+                    return await Connection.ReceiveAsync<object?>($"{connectionPrefix}{i}", cancellationTokenSource.Token).ConfigureAwait(false);
+            })).ConfigureAwait(false);
 
         object? value;
         try
@@ -321,7 +325,7 @@ public class RemoteProxyServer : IAsyncDisposable
         {
             try
             {
-                await task;
+                await task.ConfigureAwait(false);
 
                 var type = value.GetType();
                 var taskTypeName = type.BaseType?.GenericTypeArguments?.FirstOrDefault()?.FullName
@@ -334,7 +338,9 @@ public class RemoteProxyServer : IAsyncDisposable
                 {
                     value = value
                         .GetType()
+#pragma warning disable CA1849 // Call async methods when in an async method
                         .GetProperty(nameof(Task<int>.Result), BindingFlags.Public | BindingFlags.Instance)?
+#pragma warning restore CA1849 // Call async methods when in an async method
                         .GetValue(value);
                 }
             }
@@ -346,7 +352,7 @@ public class RemoteProxyServer : IAsyncDisposable
 
         try
         {
-            await Connection.SendAsync($"{connectionPrefix}out", value, cancellationTokenSource.Token);
+            await Connection.SendAsync($"{connectionPrefix}out", value, cancellationTokenSource.Token).ConfigureAwait(false);
         }
         catch (SerializationException) when (value != null)
         {
@@ -356,13 +362,13 @@ public class RemoteProxyServer : IAsyncDisposable
             await Connection.SendAsync($"{connectionPrefix}out", new CreateObjectMessage
             {
                 Guid = guid,
-            }, cancellationTokenSource.Token);
+            }, cancellationTokenSource.Token).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
             value = CreateSerializableException(exception);
 
-            await Connection.SendAsync($"{connectionPrefix}out", value, cancellationTokenSource.Token);
+            await Connection.SendAsync($"{connectionPrefix}out", value, cancellationTokenSource.Token).ConfigureAwait(false);
         }
     }
 
@@ -385,6 +391,8 @@ public class RemoteProxyServer : IAsyncDisposable
     /// </summary>
     public async ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
+
         foreach (var pair in ObjectsDictionary)
         {
             var instance = pair.Value;
@@ -405,7 +413,7 @@ public class RemoteProxyServer : IAsyncDisposable
 
         ObjectsDictionary.Clear();
 
-        await Connection.DisposeAsync();
+        await Connection.DisposeAsync().ConfigureAwait(false);
     }
 
     #endregion

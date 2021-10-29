@@ -136,7 +136,7 @@ public class EmptyProxyFactoryTests
             }
             for (var i = 0; i < args.Arguments.Count; i++)
             {
-                Console.WriteLine($"{i}: \"{args.Arguments[i]?.ToString() ?? "null"}\"");
+                Console.WriteLine($"{i}: \"{args.Arguments.ElementAtOrDefault(i)?.ToString() ?? "null"}\"");
             }
         };
         factory.EventRaised += (sender, args) =>

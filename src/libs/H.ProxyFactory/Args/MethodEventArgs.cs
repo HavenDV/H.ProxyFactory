@@ -11,7 +11,7 @@ public class MethodEventArgs : EventArgs
     /// <summary>
     /// 
     /// </summary>
-    public List<object?> Arguments { get; set; }
+    public IReadOnlyCollection<object?> Arguments { get; }
 
     /// <summary>
     /// 
@@ -49,7 +49,7 @@ public class MethodEventArgs : EventArgs
     /// <param name="arguments"></param>
     /// <param name="methodInfo"></param>
     /// <param name="proxyFactory"></param>
-    public MethodEventArgs(List<object?> arguments, MethodInfo methodInfo, EmptyProxyFactory proxyFactory)
+    public MethodEventArgs(IReadOnlyCollection<object?> arguments, MethodInfo methodInfo, EmptyProxyFactory proxyFactory)
     {
         Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
         MethodInfo = methodInfo ?? throw new ArgumentNullException(nameof(methodInfo));

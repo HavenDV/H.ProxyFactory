@@ -56,9 +56,11 @@ public class EmptyProxyFactory
     /// <returns></returns>
     public object CreateInstance(Type baseType)
     {
+        baseType = baseType ?? throw new ArgumentNullException(nameof(baseType));
+
         var type = CreateType(baseType);
 
-        var instance = Activator.CreateInstance(type, new object[0])
+        var instance = Activator.CreateInstance(type, Array.Empty<object>())
                               ?? throw new InvalidOperationException("Created instance is null");
 
         type.GetPrivateFieldInfo(ProxyFactoryFieldName)
@@ -194,7 +196,7 @@ public class EmptyProxyFactory
 
         generator.EmitCall(OpCodes.Call,
             typeof(EmptyProxyFactory).GetMethodInfo(nameof(OnMethodCalled)),
-            new[] { typeof(List<object?>), typeof(object), typeof(string) });
+            new[] { typeof(IReadOnlyCollection<object?>), typeof(object), typeof(string) });
 
         if (methodInfo.ReturnType != typeof(void))
         {
@@ -209,7 +211,9 @@ public class EmptyProxyFactory
     }
 
     // ReSharper disable once UnusedMember.Local
+#pragma warning disable CA1822 // Mark members as static
     private void Generated_Method_Example(object value1, object value2, CancellationToken cancellationToken = default)
+#pragma warning restore CA1822 // Mark members as static
     {
         var arguments = new List<object?> { value1, value2, cancellationToken };
 
@@ -223,8 +227,12 @@ public class EmptyProxyFactory
     /// <param name="instance"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static object? OnMethodCalled(List<object?> arguments, object instance, string name)
+    public static object? OnMethodCalled(IReadOnlyCollection<object?> arguments, object instance, string name)
     {
+        arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
+        instance = instance ?? throw new ArgumentNullException(nameof(instance));
+        name = name ?? throw new ArgumentNullException(nameof(name));
+
         var type = instance.GetType();
         var factory = type.GetPrivateFieldInfo(ProxyFactoryFieldName).GetValue(instance) as EmptyProxyFactory
                       ?? throw new InvalidOperationException($"{ProxyFactoryFieldName} is null");
@@ -395,7 +403,7 @@ public class EmptyProxyFactory
 
         generator.EmitCall(OpCodes.Call,
             typeof(EmptyProxyFactory).GetMethodInfo(nameof(OnEventRaised)),
-            new[] { typeof(List<object?>), typeof(object), typeof(string) });
+            new[] { typeof(IReadOnlyCollection<object?>), typeof(object), typeof(string) });
 
         generator.Emit(OpCodes.Ret);
     }
@@ -416,8 +424,10 @@ public class EmptyProxyFactory
     /// <param name="arguments"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static void OnEventRaised(List<object?> arguments, object instance, string name)
+    public static void OnEventRaised(IReadOnlyCollection<object?> arguments, object instance, string name)
     {
+        instance = instance ?? throw new ArgumentNullException(nameof(instance));
+
         var type = instance.GetType();
         var factory = type.GetPrivateFieldInfo(ProxyFactoryFieldName).GetValue(instance) as EmptyProxyFactory
                       ?? throw new InvalidOperationException($"{ProxyFactoryFieldName} is null");

@@ -86,6 +86,8 @@ public class DirectProxyFactory
     /// <returns></returns>
     public T CreateInstance<T>(T internalInstance) where T : class
     {
+        internalInstance = internalInstance ?? throw new ArgumentNullException(nameof(internalInstance));
+
         var instance = EmptyProxyFactory.CreateInstance<T>();
 
         Dictionary.Add(instance, internalInstance);

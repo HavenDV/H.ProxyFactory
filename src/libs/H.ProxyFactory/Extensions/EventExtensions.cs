@@ -16,6 +16,10 @@ public static class EventExtensions
     /// <param name="action"></param>
     public static void SubscribeToEvent(this object instance, string eventName, Action<string, object?[]> action)
     {
+        instance = instance ?? throw new ArgumentNullException(nameof(instance));
+        eventName = eventName ?? throw new ArgumentNullException(nameof(eventName));
+        action = action ?? throw new ArgumentNullException(nameof(action));
+
         var eventInfo = instance.GetType().GetEvent(eventName)
                         ?? throw new InvalidOperationException("Event info is not found");
         // ReSharper disable once ConstantNullCoalescingCondition

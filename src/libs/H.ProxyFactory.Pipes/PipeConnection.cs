@@ -112,7 +112,7 @@ public class PipeConnection : IConnection
             };
             server.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);
 
-            await server.StartAsync(cancellationToken);
+            await server.StartAsync(cancellationToken).ConfigureAwait(false);
 
             InternalConnection = server;
         }
@@ -141,15 +141,20 @@ public class PipeConnection : IConnection
     /// <returns></returns>
     public async Task SendAsync<T>(string name, T value, CancellationToken cancellationToken = default)
     {
-        await using var client = CreateClient<object?>(name);
-        client.ExceptionOccurred += (_, eventArgs) =>
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        var client = CreateClient<object?>(name);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+        await using (client.ConfigureAwait(false))
         {
-            OnExceptionOccurred(eventArgs.Exception);
-        };
+            client.ExceptionOccurred += (_, eventArgs) =>
+            {
+                OnExceptionOccurred(eventArgs.Exception);
+            };
 
-        await client.ConnectAsync(cancellationToken);
+            await client.ConnectAsync(cancellationToken).ConfigureAwait(false);
 
-        await client.WriteAsync(value, cancellationToken);
+            await client.WriteAsync(value, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     /// <summary>
@@ -161,17 +166,23 @@ public class PipeConnection : IConnection
     /// <returns></returns>
     public async Task<T> ReceiveAsync<T>(string name, CancellationToken cancellationToken = default)
     {
-        await using var server = CreateServer<T>(name);
-        server.ExceptionOccurred += (_, eventArgs) =>
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        var server = CreateServer<T>(name);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+        await using (server.ConfigureAwait(false))
         {
-            OnExceptionOccurred(eventArgs.Exception);
-        };
 
-        var args = await server.WaitMessageAsync(
-            async token => await server.StartAsync(token),
-            cancellationToken);
+            server.ExceptionOccurred += (_, eventArgs) =>
+            {
+                OnExceptionOccurred(eventArgs.Exception);
+            };
 
-        return args.Message;
+            var args = await server.WaitMessageAsync(
+                async token => await server.StartAsync(token).ConfigureAwait(false),
+                cancellationToken).ConfigureAwait(false);
+
+            return args.Message;
+        }
     }
 
     /// <summary>
@@ -179,9 +190,11 @@ public class PipeConnection : IConnection
     /// </summary>
     public async ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
+
         if (InternalConnection != null)
         {
-            await InternalConnection.DisposeAsync();
+            await InternalConnection.DisposeAsync().ConfigureAwait(false);
         }
     }
 

@@ -10,7 +10,9 @@ public sealed class PipeProxyFactory : RemoteProxyFactory
     /// <summary>
     /// 
     /// </summary>
+#pragma warning disable CA2000 // Dispose objects before losing scope
     public PipeProxyFactory() : base(new PipeConnection(true))
+#pragma warning restore CA2000 // Dispose objects before losing scope
     {
     }
 

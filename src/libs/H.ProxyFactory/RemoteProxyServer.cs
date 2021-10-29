@@ -407,7 +407,7 @@ public class RemoteProxyServer : IAsyncDisposable
             }
             if (instance is IAsyncDisposable asyncDisposable)
             {
-                asyncDisposable.DisposeAsync().AsTask().Wait();
+                await asyncDisposable.DisposeAsync().ConfigureAwait(false);
             }
         }
 

@@ -150,18 +150,25 @@ public class RemoteProxyServer : IAsyncDisposable
                     break;
 
                 case CreateObjectMessage o:
-                    var guid = o.Guid ?? throw new ArgumentNullException(nameof(o.Guid));
-                    var typeName = o.TypeName ?? throw new ArgumentNullException(nameof(o.TypeName));
-                    CreateObject(guid, typeName);
-                    break;
+                    {
+                        var guid = o.Guid ?? throw new ArgumentNullException(nameof(o.Guid));
+                        var typeName = o.TypeName ?? throw new ArgumentNullException(nameof(o.TypeName));
+                        var connectionPrefix = o.ConnectionPrefix ?? throw new ArgumentNullException(nameof(o.ConnectionPrefix));
+
+                        await CreateObjectAsync(guid, typeName, connectionPrefix).ConfigureAwait(false);
+                        break;
+                    }
 
                 case RunMethodMessage o:
-                    var objectGuid = o.ObjectGuid ?? throw new ArgumentNullException(nameof(o.ObjectGuid));
-                    var methodName = o.MethodName ?? throw new ArgumentNullException(nameof(o.MethodName));
-                    var methodGuid = o.MethodGuid ?? throw new ArgumentNullException(nameof(o.MethodGuid));
-                    var connectionPrefix = o.ConnectionPrefix ?? throw new ArgumentNullException(nameof(o.ConnectionPrefix));
-                    await RunMethodAsync(objectGuid, methodName, methodGuid, connectionPrefix).ConfigureAwait(false);
-                    break;
+                    {
+                        var objectGuid = o.ObjectGuid ?? throw new ArgumentNullException(nameof(o.ObjectGuid));
+                        var methodName = o.MethodName ?? throw new ArgumentNullException(nameof(o.MethodName));
+                        var methodGuid = o.MethodGuid ?? throw new ArgumentNullException(nameof(o.MethodGuid));
+                        var connectionPrefix = o.ConnectionPrefix ?? throw new ArgumentNullException(nameof(o.ConnectionPrefix));
+
+                        await RunMethodAsync(objectGuid, methodName, methodGuid, connectionPrefix).ConfigureAwait(false);
+                        break;
+                    }
             }
         }
         catch (Exception exception)
@@ -222,16 +229,32 @@ public class RemoteProxyServer : IAsyncDisposable
     /// </summary>
     /// <param name="guid"></param>
     /// <param name="typeName"></param>
-    public void CreateObject(Guid guid, string typeName)
+    /// <param name="connectionPrefix"></param>
+    public async Task CreateObjectAsync(Guid guid, string typeName, string connectionPrefix)
     {
-        ////throw new Exception(string.Join(" ", assembly.GetTypes().Select(i => $"{i.FullName}")));
+        try
+        {
+            ////throw new Exception(string.Join(" ", assembly.GetTypes().Select(i => $"{i.FullName}")));
 
-        var assembly = Assemblies.FirstOrDefault(i =>
-                           i.GetTypes().Any(type => type.FullName == typeName))
-                       ?? throw new InvalidOperationException($"Assembly with type \"{typeName}\" is not loaded");
-        var instance = assembly.CreateInstance(typeName) ?? throw new InvalidOperationException("Instance is null");
+            var assembly = Assemblies.FirstOrDefault(i =>
+                               i.GetTypes().Any(type => type.FullName == typeName))
+                           ?? throw new InvalidOperationException($"Assembly with type \"{typeName}\" is not loaded");
+            var instance = assembly.CreateInstance(typeName) ?? throw new InvalidOperationException("Instance is null");
 
-        AddObject(guid, instance);
+            AddObject(guid, instance);
+
+            await Connection.SendAsync(
+                $"{connectionPrefix}out",
+                true).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            var value = CreateSerializableException(exception);
+
+            await Connection.SendAsync(
+                $"{connectionPrefix}out",
+                value).ConfigureAwait(false);
+        }
     }
 
     /// <summary>
@@ -286,12 +309,12 @@ public class RemoteProxyServer : IAsyncDisposable
             {
                 if (parameter.ParameterType == typeof(CancellationToken))
                 {
-                        // ReSharper disable once AccessToDisposedClosure
-                        return cancellationTokenSource.Token;
+                    // ReSharper disable once AccessToDisposedClosure
+                    return cancellationTokenSource.Token;
                 }
 
-                    // ReSharper disable once AccessToDisposedClosure
-                    return await Connection.ReceiveAsync<object?>($"{connectionPrefix}{i}", cancellationTokenSource.Token).ConfigureAwait(false);
+                // ReSharper disable once AccessToDisposedClosure
+                return await Connection.ReceiveAsync<object?>($"{connectionPrefix}{i}", cancellationTokenSource.Token).ConfigureAwait(false);
             })).ConfigureAwait(false);
 
         object? value;

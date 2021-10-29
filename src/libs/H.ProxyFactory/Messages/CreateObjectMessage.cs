@@ -4,7 +4,7 @@
 /// 
 /// </summary>
 [Serializable]
-public class CreateObjectMessage : Message
+public class CreateObjectMessage : RunMethodMessage
 {
     /// <summary>
     /// 

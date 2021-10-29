@@ -177,11 +177,23 @@ public class RemoteProxyFactory : IAsyncDisposable
         ObjectsDictionary.Add(guid, instance);
         GuidDictionary.Add(instance, guid);
 
-        await Connection.SendMessageAsync(new CreateObjectMessage
+        var message = new CreateObjectMessage
         {
             Guid = guid,
             TypeName = typeName,
-        }, cancellationToken).ConfigureAwait(false);
+            MethodGuid = Guid.NewGuid(),
+            MethodName = "Constructor",
+        };
+
+        await Connection.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
+
+        var value = await Connection.ReceiveAsync<object?>(
+            $"{message.ConnectionPrefix}out",
+            cancellationToken).ConfigureAwait(false);
+        if (value is Exception exception)
+        {
+            throw exception;
+        }
 
         return instance;
     }

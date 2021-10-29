@@ -1,4 +1,5 @@
 ﻿namespace H.ProxyFactory.TestTypes;
+
 #region Events
 
 public delegate void TextDelegate(string text);
@@ -61,11 +62,11 @@ public class MethodsClass : IMethodsClass
     public ICollection<string> StringCollection123()
     {
         return new Dictionary<string, object?>
-            {
-                { "1", null },
-                { "2", null },
-                { "3", null },
-            }.Keys;
+        {
+            { "1", null },
+            { "2", null },
+            { "3", null },
+        }.Keys;
     }
 
     public IEventsClass GetEventClass()

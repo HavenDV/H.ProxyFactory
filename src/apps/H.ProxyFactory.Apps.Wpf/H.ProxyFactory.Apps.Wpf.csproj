@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\libs\H.ProxyFactory.Pipes\H.ProxyFactory.Pipes.csproj" />
+    <ProjectReference Include="..\..\tests\H.ProxyFactory.TestTypes\H.ProxyFactory.TestTypes.csproj" />
   </ItemGroup>
 
 </Project>

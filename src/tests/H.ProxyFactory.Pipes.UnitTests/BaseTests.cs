@@ -16,8 +16,8 @@ public static class BaseTests
             Console.WriteLine($"factory.ExceptionOccurred: {exception}");
             receivedException = exception;
 
-                // ReSharper disable once AccessToDisposedClosure
-                try
+            // ReSharper disable once AccessToDisposedClosure
+            try
             {
                 cancellationTokenSource.Cancel();
             }

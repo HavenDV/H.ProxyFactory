@@ -13,7 +13,7 @@ public static class EventExtensions
         public TaskCompletionSource<T>? Source { get; set; }
 
         // ReSharper disable once UnusedParameter.Local
-        public void HandleEvent(object sender, T e)
+        public void HandleEvent(object _, T e)
         {
             Source?.TrySetResult(e);
         }

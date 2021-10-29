@@ -5,30 +5,28 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.7.4</Version>
-    <Description>
-      Features:
-      - Create proxy objects that look exactly like the original objects
-    </Description>
+    <Description>Features:
+- Create proxy objects that look exactly like the original objects
+
+$(PACKAGE_RELEASE_NOTES)</Description>
     <PackageTags>proxy objects, empty proxy, direct proxy, log method calls</PackageTags>
-    <PackageReleaseNotes>Updated target frameworks.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' " >
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' " >
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' " >
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0"/>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' ">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

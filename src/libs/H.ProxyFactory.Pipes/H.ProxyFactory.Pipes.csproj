@@ -6,14 +6,12 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Version>0.7.4</Version>
-    <Description>
-      Features:
-      - Create proxy objects that look exactly like the original objects
-      - Proxy target can be located anywhere where there is access to pipes
-    </Description>
-    <PackageTags>proxy objects, direct proxy, pipe proxy</PackageTags>
-    <PackageReleaseNotes>Updated target frameworks.</PackageReleaseNotes>
+    <Description>Features:
+- Create proxy objects that look exactly like the original objects
+- Proxy target can be located anywhere where there is access to pipes
+
+$(PACKAGE_RELEASE_NOTES)</Description>
+    <PackageTags>rpc, ipc, pubsub, pipes, netstandard, request-response, net5, net6</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

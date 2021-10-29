@@ -20,6 +20,10 @@
     <PackageReference Include="H.Pipes" Version="1.14.6" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' " >
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\H.ProxyFactory\H.ProxyFactory.csproj" />
   </ItemGroup>

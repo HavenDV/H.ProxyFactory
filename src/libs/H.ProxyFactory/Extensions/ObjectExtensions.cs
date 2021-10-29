@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Utilities.Extensions
+﻿namespace H.Utilities.Extensions
 {
     /// <summary>
     /// 

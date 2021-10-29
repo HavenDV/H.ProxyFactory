@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace H.ProxyFactory.TestTypes
+﻿namespace H.ProxyFactory.TestTypes
 {
     #region Events
 

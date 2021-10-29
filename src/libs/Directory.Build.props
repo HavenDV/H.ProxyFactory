@@ -2,6 +2,11 @@
 
   <Import Project="..\Directory.Build.props" />
 
+  <PropertyGroup Label="Signing">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\src\key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <PropertyGroup Label="Nuget">
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

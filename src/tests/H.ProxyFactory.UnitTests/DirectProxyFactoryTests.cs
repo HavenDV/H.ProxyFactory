@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using H.ProxyFactory.TestTypes;
+﻿using H.ProxyFactory.TestTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Utilities.Tests

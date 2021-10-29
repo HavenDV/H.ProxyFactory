@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Utilities.Messages
+﻿namespace H.Utilities.Messages
 {
     /// <summary>
     /// 

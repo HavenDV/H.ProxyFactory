@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using H.Core;
+﻿using H.Core;
 using H.ProxyFactory.Pipes.UnitTests.Extensions;
 using H.ProxyFactory.TestTypes;
 using H.Recorders;

@@ -1,27 +1,26 @@
-﻿namespace H.ProxyFactory.Messages
+﻿namespace H.ProxyFactory.Messages;
+
+/// <summary>
+/// 
+/// </summary>
+[Serializable]
+public class CreateObjectMessage : Message
 {
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
-    public class CreateObjectMessage : Message
+    public string? TypeName { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Guid? Guid { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public CreateObjectMessage()
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string? TypeName { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Guid? Guid { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CreateObjectMessage()
-        {
-            Text = "create_object";
-        }
+        Text = "create_object";
     }
 }

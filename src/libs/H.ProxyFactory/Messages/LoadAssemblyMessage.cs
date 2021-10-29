@@ -1,22 +1,21 @@
-﻿namespace H.ProxyFactory.Messages
+﻿namespace H.ProxyFactory.Messages;
+
+/// <summary>
+/// 
+/// </summary>
+[Serializable]
+public class LoadAssemblyMessage : Message
 {
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
-    public class LoadAssemblyMessage : Message
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string? Path { get; set; }
+    public string? Path { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public LoadAssemblyMessage()
-        {
-            Text = "load_assembly";
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    public LoadAssemblyMessage()
+    {
+        Text = "load_assembly";
     }
 }

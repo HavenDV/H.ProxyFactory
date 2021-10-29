@@ -1,17 +1,16 @@
-﻿namespace H.ProxyFactory.Messages
+﻿namespace H.ProxyFactory.Messages;
+
+/// <summary>
+/// 
+/// </summary>
+[Serializable]
+public class GetTypesMessage : Message
 {
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
-    public class GetTypesMessage : Message
+    public GetTypesMessage()
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public GetTypesMessage()
-        {
-            Text = "get_types";
-        }
+        Text = "get_types";
     }
 }

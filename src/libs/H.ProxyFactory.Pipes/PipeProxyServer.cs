@@ -1,19 +1,18 @@
-﻿namespace H.ProxyFactory
+﻿namespace H.ProxyFactory;
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class PipeProxyServer : RemoteProxyServer
 {
+    #region Constructors
+
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PipeProxyServer : RemoteProxyServer
+    public PipeProxyServer() : base(new PipeConnection(false))
     {
-        #region Constructors
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public PipeProxyServer() : base(new PipeConnection(false))
-        {
-        }
-
-        #endregion
     }
+
+    #endregion
 }

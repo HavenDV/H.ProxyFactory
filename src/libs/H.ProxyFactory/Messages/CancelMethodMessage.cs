@@ -1,17 +1,16 @@
-﻿namespace H.ProxyFactory.Messages
+﻿namespace H.ProxyFactory.Messages;
+
+/// <summary>
+/// 
+/// </summary>
+[Serializable]
+public class CancelMethodMessage : MethodMessage
 {
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
-    public class CancelMethodMessage : MethodMessage
+    public CancelMethodMessage()
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public CancelMethodMessage()
-        {
-            Text = "cancel_method";
-        }
+        Text = "cancel_method";
     }
 }

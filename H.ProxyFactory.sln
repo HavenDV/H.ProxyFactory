@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory", "src\libs\H.ProxyFactory\H.ProxyFactory.csproj", "{8C39C5CD-A8D1-4528-9FCE-0190BD515466}"
 EndProject
@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9CAA231D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94FE90BF-FA05-46C6-A207-6E454A236659}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		src\Directory.Build.props = src\Directory.Build.props
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
@@ -29,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory.UnitTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory.Pipes.UnitTests", "src\tests\H.ProxyFactory.Pipes.UnitTests\H.ProxyFactory.Pipes.UnitTests.csproj", "{FA98E2E7-D0C7-4A77-8D84-2C3ECF4468F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.ProxyFactory.TestTypes", "src\tests\H.ProxyFactory.TestTypes\H.ProxyFactory.TestTypes.csproj", "{A1BF7401-D31B-45D8-B3B2-1D7A1A7765D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory.TestTypes", "src\tests\H.ProxyFactory.TestTypes\H.ProxyFactory.TestTypes.csproj", "{A1BF7401-D31B-45D8-B3B2-1D7A1A7765D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

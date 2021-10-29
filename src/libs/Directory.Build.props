@@ -5,6 +5,10 @@
   <PropertyGroup Label="Common">
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+
+  <ItemGroup Label="CLSCompliant">
+    <Compile Include="$(SolutionDir)src\CLSCompliantTrue.cs" />
+  </ItemGroup>
   
   <PropertyGroup Label="Signing">
     <SignAssembly>true</SignAssembly>

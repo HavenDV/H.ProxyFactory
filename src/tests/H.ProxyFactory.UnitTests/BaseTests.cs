@@ -1,13 +1,13 @@
 ﻿using System.Collections.Concurrent;
-using H.Utilities.Messages;
+using H.ProxyFactory.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.UnitTests
 {
     public static class BaseTests
     {
         public static async Task BaseInstanceRemoteTestAsync<T>(string typeName,
-            Func<T, CancellationToken, Task> func, 
+            Func<T, CancellationToken, Task> func,
             CancellationToken cancellationToken)
             where T : class
         {

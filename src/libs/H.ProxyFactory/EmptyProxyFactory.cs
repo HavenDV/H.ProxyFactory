@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using H.Utilities.Args;
-using H.Utilities.Extensions;
+using H.ProxyFactory.Args;
+using H.ProxyFactory.Extensions;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// Creates empty copy of selected class
@@ -191,10 +191,10 @@ namespace H.Utilities
 
             generator.Emit(OpCodes.Ldarg_0); // [list, arg_0]
             generator.Emit(OpCodes.Ldstr, methodInfo.Name); // [list, arg_0, name]
-            
+
             generator.EmitCall(OpCodes.Call,
-                typeof(EmptyProxyFactory).GetMethodInfo(nameof(OnMethodCalled)), 
-                new [] { typeof(List<object?>), typeof(object), typeof(string) });
+                typeof(EmptyProxyFactory).GetMethodInfo(nameof(OnMethodCalled)),
+                new[] { typeof(List<object?>), typeof(object), typeof(string) });
 
             if (methodInfo.ReturnType != typeof(void))
             {
@@ -211,7 +211,7 @@ namespace H.Utilities
         // ReSharper disable once UnusedMember.Local
         private void Generated_Method_Example(object value1, object value2, CancellationToken cancellationToken = default)
         {
-            var arguments = new List<object?> {value1, value2, cancellationToken};
+            var arguments = new List<object?> { value1, value2, cancellationToken };
 
             OnMethodCalled(arguments, new object(), "123");
         }
@@ -229,7 +229,7 @@ namespace H.Utilities
             var factory = type.GetPrivateFieldInfo(ProxyFactoryFieldName).GetValue(instance) as EmptyProxyFactory
                           ?? throw new InvalidOperationException($"{ProxyFactoryFieldName} is null");
             var allArgumentsNotNull = arguments.All(argument => argument != null);
-            var methodInfo = type.GetMethodInfo(name, 
+            var methodInfo = type.GetMethodInfo(name,
                 allArgumentsNotNull
                     // ReSharper disable once RedundantEnumerableCastCall
                     ? arguments.Cast<object>().Select(argument => argument.GetType()).ToArray()
@@ -306,10 +306,10 @@ namespace H.Utilities
         {
             foreach (var info in baseType.GetEvents())
             {
-                var handlerType = info.EventHandlerType ?? 
+                var handlerType = info.EventHandlerType ??
                                   // ReSharper disable once ConstantNullCoalescingCondition
                                   throw new InvalidOperationException("EventHandlerType is null");
-                
+
                 var fieldBuilder = typeBuilder.DefineField(info.Name, handlerType, FieldAttributes.Private);
                 var eventBuilder = typeBuilder.DefineEvent(info.Name, info.Attributes, handlerType);
 
@@ -329,8 +329,8 @@ namespace H.Utilities
                 addGenerator.Emit(OpCodes.Stfld, fieldBuilder);
                 addGenerator.Emit(OpCodes.Ret);
 
-                eventBuilder.SetAddOnMethod(addMethod); 
-                
+                eventBuilder.SetAddOnMethod(addMethod);
+
                 var removeMethod = typeBuilder.DefineMethod($"remove_{info.Name}",
                     MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.SpecialName | MethodAttributes.Final | MethodAttributes.HideBySig | MethodAttributes.NewSlot,
                     CallingConventions.Standard | CallingConventions.HasThis,
@@ -348,7 +348,7 @@ namespace H.Utilities
                 eventBuilder.SetRemoveOnMethod(removeMethod);
 
                 var methodInfo = handlerType.GetMethodInfo("Invoke");
-                var parameterTypes = methodInfo 
+                var parameterTypes = methodInfo
                     .GetParameters()
                     .Select(parameter => parameter.ParameterType)
                     .ToArray();
@@ -360,7 +360,7 @@ namespace H.Utilities
                     MethodAttributes.NewSlot,
                     typeof(void),
                     parameterTypes);
-                
+
                 var generator = onMethodBuilder.GetILGenerator();
                 GenerateOnEventMethod(generator, info, methodInfo);
 
@@ -467,7 +467,7 @@ namespace H.Utilities
 
                 return typeof(Task).GetMethodInfo(nameof(Task.FromResult))
                     .MakeGenericMethod(taskType)
-                    .Invoke(null, new []{ value });
+                    .Invoke(null, new[] { value });
             }
 
             return type.GetDefault();

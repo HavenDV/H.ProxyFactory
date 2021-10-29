@@ -1,8 +1,8 @@
 ﻿using H.Pipes;
 using H.Pipes.Extensions;
-using H.Utilities.Messages;
+using H.ProxyFactory.Messages;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// 
@@ -59,7 +59,7 @@ namespace H.Utilities
         {
             return new SingleConnectionPipeClient<T>(name);
         }
-        
+
         private static IPipeServer<T> CreateServer<T>(string name)
         {
             return new SingleConnectionPipeServer<T>(name);
@@ -88,7 +88,7 @@ namespace H.Utilities
                         OnExceptionOccurred(new InvalidOperationException("Received null message from server."));
                         return;
                     }
-                    
+
                     OnMessageReceived(args.Message);
                 };
                 client.ExceptionOccurred += (_, args) => OnExceptionOccurred(args.Exception);

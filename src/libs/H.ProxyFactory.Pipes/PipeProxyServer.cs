@@ -1,4 +1,4 @@
-﻿namespace H.Utilities
+﻿namespace H.ProxyFactory
 {
     /// <summary>
     /// 

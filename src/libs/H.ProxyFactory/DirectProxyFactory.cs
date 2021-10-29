@@ -1,6 +1,6 @@
-﻿using H.Utilities.Args;
+﻿using H.ProxyFactory.Args;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// 

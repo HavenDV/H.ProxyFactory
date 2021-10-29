@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using H.Utilities.Args;
-using H.Utilities.Extensions;
-using H.Utilities.Messages;
+using H.ProxyFactory.Args;
+using H.ProxyFactory.Extensions;
+using H.ProxyFactory.Messages;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// 
@@ -15,12 +15,12 @@ namespace H.Utilities
         /// <summary>
         /// 
         /// </summary>
-        public List<string> LoadedAssemblies { get; } = new ();
+        public List<string> LoadedAssemblies { get; } = new();
 
         private IConnection Connection { get; }
-        private EmptyProxyFactory EmptyProxyFactory { get; } = new ();
-        private Dictionary<object, Guid> GuidDictionary { get; } = new ();
-        private Dictionary<Guid, object> ObjectsDictionary { get; } = new ();
+        private EmptyProxyFactory EmptyProxyFactory { get; } = new();
+        private Dictionary<object, Guid> GuidDictionary { get; } = new();
+        private Dictionary<Guid, object> ObjectsDictionary { get; } = new();
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace H.Utilities
                 .ConfigureAwait(false);
 
             var value = await Connection.ReceiveAsync<object?>("GetTypes", cancellationToken);
-            
+
             return value switch
             {
                 string[] typeNames => typeNames,
@@ -228,7 +228,7 @@ namespace H.Utilities
 
         private async Task<object?> RunMethodAsync(MethodInfo methodInfo, object instance, object?[] args, CancellationToken cancellationToken = default)
         {
-            var token = args.FirstOrDefault(arg => arg is CancellationToken) as CancellationToken? 
+            var token = args.FirstOrDefault(arg => arg is CancellationToken) as CancellationToken?
                         ?? cancellationToken;
             var message = new RunMethodMessage
             {
@@ -275,12 +275,12 @@ namespace H.Utilities
             if (value is CreateObjectMessage createObjectMessage)
             {
                 var guid = createObjectMessage.Guid ?? throw new InvalidOperationException("Guid is null");
-                
+
                 return GetReturnObject(methodInfo.ReturnType,
                     actualType =>
                     {
                         var obj = EmptyProxyFactory.CreateInstance(actualType);
-                        
+
                         ObjectsDictionary.Add(guid, obj);
                         GuidDictionary.Add(obj, guid);
 
@@ -305,12 +305,12 @@ namespace H.Utilities
             {
                 var taskType = type.GenericTypeArguments.FirstOrDefault()
                                ?? throw new InvalidOperationException("Task type is null");
-                
+
                 return typeof(Task).GetMethodInfo(nameof(Task.FromResult))
                     .MakeGenericMethod(taskType)
                     .Invoke(null, new[] { func(taskType) });
             }
-            
+
             return func(type);
         }
 

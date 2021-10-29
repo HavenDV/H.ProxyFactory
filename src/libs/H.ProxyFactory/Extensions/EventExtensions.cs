@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace H.Utilities.Extensions
+namespace H.ProxyFactory.Extensions
 {
     /// <summary>
     /// Extensions that work with <see langword="event"/> <br/>

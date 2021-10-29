@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+﻿using H.ProxyFactory;
+using System.Reflection;
 
-namespace H.Utilities.Args
+namespace H.ProxyFactory.Args
 {
     /// <summary>
     /// 

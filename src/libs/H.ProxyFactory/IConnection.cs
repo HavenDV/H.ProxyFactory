@@ -1,6 +1,6 @@
-﻿using H.Utilities.Messages;
+﻿using H.ProxyFactory.Messages;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// Defines the connection used for RemoteProxyFactory and RemoteProxyServer

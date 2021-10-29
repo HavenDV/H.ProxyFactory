@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace H.Utilities.Extensions
+namespace H.ProxyFactory.Extensions
 {
     /// <summary>
     /// <see cref="Type"/> extensions

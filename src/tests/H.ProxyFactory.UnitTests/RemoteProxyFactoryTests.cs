@@ -1,8 +1,8 @@
 ﻿using H.ProxyFactory.TestTypes;
-using H.Utilities.Tests.Extensions;
+using H.ProxyFactory.UnitTests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.UnitTests
 {
     [TestClass]
     public class RemoteProxyFactoryTests

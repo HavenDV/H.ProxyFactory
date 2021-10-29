@@ -1,4 +1,4 @@
-﻿namespace H.Utilities.Extensions
+﻿namespace H.ProxyFactory.Extensions
 {
     /// <summary>
     /// 

@@ -1,5 +1,4 @@
-﻿using H.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.ProxyFactory.Pipes.UnitTests
 {

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace H.Utilities.Tests.Extensions
+namespace H.ProxyFactory.UnitTests.Extensions
 {
     /// <summary>
     /// Extensions that work with <see langword="event"/> <br/>
@@ -125,11 +125,11 @@ namespace H.Utilities.Tests.Extensions
             var parameters = parameterTypes.Select(Expression.Parameter).ToArray();
             var handlerExpression = Expression.Lambda(eventInfo.EventHandlerType,
                 Expression.Call(
-                    Expression.Constant(taskCompletionSource), 
+                    Expression.Constant(taskCompletionSource),
                     typeof(TaskCompletionSource<object?[]>)
                         .GetMethod(
                             nameof(TaskCompletionSource<object?[]>.SetResult),
-                            new []{typeof(object?[])}) ?? 
+                            new[] { typeof(object?[]) }) ??
                     throw new InvalidOperationException("SetResult method is not found"),
                     Expression.NewArrayInit(typeof(object),
                         parameters.Select(

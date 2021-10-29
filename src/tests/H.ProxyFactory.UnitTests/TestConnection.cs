@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using H.Utilities.Messages;
+using H.ProxyFactory.Messages;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.UnitTests
 {
     internal class TestConnection : IConnection
     {
@@ -110,7 +110,7 @@ namespace H.Utilities.Tests
         {
             CancellationTokenSource.Cancel();
             CancellationTokenSource.Dispose();
-            
+
             await Task.CompletedTask;
         }
 

@@ -1,4 +1,4 @@
-﻿namespace H.Utilities.Messages
+﻿namespace H.ProxyFactory.Messages
 {
     /// <summary>
     /// 

@@ -1,7 +1,8 @@
-﻿using H.ProxyFactory.TestTypes;
+﻿using H.ProxyFactory;
+using H.ProxyFactory.TestTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace H.Utilities.Tests
+namespace H.ProxyFactory.UnitTests
 {
     [TestClass]
     public class DirectProxyFactoryTests

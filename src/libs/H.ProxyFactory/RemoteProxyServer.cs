@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
-using H.Utilities.Extensions;
-using H.Utilities.Messages;
+using H.ProxyFactory.Extensions;
+using H.ProxyFactory.Messages;
 
-namespace H.Utilities
+namespace H.ProxyFactory
 {
     /// <summary>
     /// 
@@ -16,8 +16,8 @@ namespace H.Utilities
         private IConnection Connection { get; }
 
         private List<Assembly> Assemblies { get; } = AppDomain.CurrentDomain.GetAssemblies().ToList();
-        private List<Assembly> LoadedAssemblies { get; } = new ();
-        private Dictionary<Guid, object> ObjectsDictionary { get; } = new ();
+        private List<Assembly> LoadedAssemblies { get; } = new();
+        private Dictionary<Guid, object> ObjectsDictionary { get; } = new();
 
         #endregion
 
@@ -228,7 +228,7 @@ namespace H.Utilities
                                i.GetTypes().Any(type => type.FullName == typeName))
                            ?? throw new InvalidOperationException($"Assembly with type \"{typeName}\" is not loaded");
             var instance = assembly.CreateInstance(typeName) ?? throw new InvalidOperationException("Instance is null");
-            
+
             AddObject(guid, instance);
         }
 
@@ -306,15 +306,15 @@ namespace H.Utilities
                 if (!type.IsArray)
                 {
                     var elementType = type.GetInterfaces()
-                        .FirstOrDefault(i => 
-                            i.Name.StartsWith(nameof(ICollection)) && 
+                        .FirstOrDefault(i =>
+                            i.Name.StartsWith(nameof(ICollection)) &&
                             i.GenericTypeArguments.Any())?
                         .GenericTypeArguments
                         .FirstOrDefault();
                     value = typeof(Enumerable)
                         .GetMethod(nameof(Enumerable.ToArray), BindingFlags.Static | BindingFlags.Public)?
                         .MakeGenericMethod(elementType)
-                        .Invoke(null, new []{ value });
+                        .Invoke(null, new[] { value });
                 }
             }
             if (value is Task task)
@@ -324,7 +324,7 @@ namespace H.Utilities
                     await task;
 
                     var type = value.GetType();
-                    var taskTypeName = type.BaseType?.GenericTypeArguments?.FirstOrDefault()?.FullName 
+                    var taskTypeName = type.BaseType?.GenericTypeArguments?.FirstOrDefault()?.FullName
                         ?? type.GenericTypeArguments?.FirstOrDefault()?.FullName;
                     if (taskTypeName == "System.Threading.Tasks.VoidTaskResult")
                     {
@@ -352,7 +352,7 @@ namespace H.Utilities
             {
                 var guid = Guid.NewGuid();
                 AddObject(guid, value);
-                
+
                 await Connection.SendAsync($"{connectionPrefix}out", new CreateObjectMessage
                 {
                     Guid = guid,

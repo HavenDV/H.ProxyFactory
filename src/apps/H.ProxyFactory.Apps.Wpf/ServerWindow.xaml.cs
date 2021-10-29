@@ -49,14 +49,28 @@ public partial class ServerWindow
 
     private async void Window_Loaded(object _, RoutedEventArgs e)
     {
-        await Server.InitializeAsync(ServerName).ConfigureAwait(false);
+        try
+        {
+            await Server.InitializeAsync(ServerName).ConfigureAwait(false);
 
-        WriteLine($"Initilized");
+            WriteLine($"Initilized");
+        }
+        catch (Exception exception)
+        {
+            WriteLine($"{nameof(Window_Loaded)}: {exception}");
+        }
     }
 
     private async void Window_Unloaded(object _, RoutedEventArgs e)
     {
-        await Server.DisposeAsync().ConfigureAwait(false);
+        try
+        {
+            await Server.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            WriteLine($"{nameof(Window_Unloaded)}: {exception}");
+        }
     }
 
     #endregion

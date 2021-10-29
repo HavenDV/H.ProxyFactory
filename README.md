@@ -72,5 +72,7 @@ instance.RaiseEvent1();
 var result = Instance.Method2("argument");
 ```
 
+![1](/assets/1.png)
+
 ### Contacts
 * [mail](mailto:havendv@gmail.com)

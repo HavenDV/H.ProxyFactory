@@ -52,6 +52,9 @@ public partial class ClientWindow
 
             WriteLine($"Initilized");
 
+            await Factory.LoadAssemblyAsync(
+                typeof(SimpleEventClass).Assembly.Location).ConfigureAwait(false);
+
             Instance = await Factory.CreateInstanceAsync<ISimpleEventClass>(
                 typeof(SimpleEventClass).FullName ?? string.Empty).ConfigureAwait(false);
             Instance.Event1 += (_, args) =>

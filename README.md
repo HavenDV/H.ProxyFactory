@@ -23,25 +23,42 @@ Install-Package H.ProxyFactory.Pipes
 ### Usage
 Shared code:
 ```cs
-public interface ISimpleEventClass
+public interface IActionService
 {
-    event EventHandler<int> Event1;
-    string Method2(string input);
+    void SendText(string text);
+    void ShowTrayIcon();
+    void HideTrayIcon();
+
+    event EventHandler<string> TextReceived;
 }
 
-public class SimpleEventClass : ISimpleEventClass
+public class ActionService { }
+```
+
+Implementation on target platform:
+```cs
+public class ActionService : IActionService
 {
-    public event EventHandler<int>? Event1;
+    private TrayIconService trayIconService = new();
 
-    public void RaiseEvent1()
+    public void SendText(string text)
     {
-        Event1?.Invoke(this, 777);
+        Console.WriteLine($"Text from client: {text}");
+
+        TextReceived?.Invoke(this, "Hi from server");
     }
 
-    public string Method2(string input)
+    public void ShowTrayIcon()
     {
-        return $"Hello, input = {input}";
+        trayIconService.ShowTrayIcon();
     }
+
+    public void HideTrayIcon()
+    {
+        trayIconService.HideTrayIcon();
+    }
+
+    public event EventHandler<string>? TextReceived;
 }
 ```
 
@@ -58,18 +75,14 @@ await using var factory = new PipeProxyFactory();
 
 await factory.InitializeAsync("UniquePipeServerName");
 
-// If the server does not use the library where the shared code is located, it must be loaded.
-await factory.LoadAssemblyAsync(typeof(SimpleEventClass).Assembly.Location);
-
 // You will have access to an interface through which you will interact with the object created on the server.
-var instance = await factory.CreateInstanceAsync<ISimpleEventClass>(
-    typeof(SimpleEventClass).FullName ?? string.Empty);
-instance.Event1 += (_, args) =>
+var service = await factory.CreateInstanceAsync<ActionService, IActionService>();
+instance.TextReceived += (_, text) =>
 {
-    WriteLine($"{nameof(instance.Event1)}: {args}");
+    WriteLine($"{nameof(instance.TextReceived)}: {text}");
 };
-instance.RaiseEvent1();
-var result = Instance.Method2("argument");
+instance.ShowTrayIcon();
+Instance.SendText("hello!");
 ```
 
 ![1](/assets/1.png)

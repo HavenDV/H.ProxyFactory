@@ -35,7 +35,7 @@ public interface IActionService
 public class ActionService { }
 ```
 
-Implementation on target platform:
+Implementation in the server project:
 ```cs
 public class ActionService : IActionService
 {

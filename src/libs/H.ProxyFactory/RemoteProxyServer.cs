@@ -33,14 +33,24 @@ public class RemoteProxyServer : IAsyncDisposable
     /// </summary>
     public event EventHandler<string>? MessageReceived;
 
-    private void OnExceptionOccurred(Exception exception)
+    /// <summary>
+    /// 
+    /// </summary>
+    public event EventHandler<object>? ObjectCreated;
+
+    private void OnExceptionOccurred(Exception value)
     {
-        ExceptionOccurred?.Invoke(this, exception);
+        ExceptionOccurred?.Invoke(this, value);
     }
 
-    private void OnMessageReceived(string message)
+    private void OnMessageReceived(string value)
     {
-        MessageReceived?.Invoke(this, message);
+        MessageReceived?.Invoke(this, value);
+    }
+
+    private void OnObjectCreated(object value)
+    {
+        ObjectCreated?.Invoke(this, value);
     }
 
     #endregion
@@ -242,6 +252,8 @@ public class RemoteProxyServer : IAsyncDisposable
             var instance = assembly.CreateInstance(typeName) ?? throw new InvalidOperationException("Instance is null");
 
             AddObject(guid, instance);
+
+            OnObjectCreated(instance);
 
             await Connection.SendAsync(
                 $"{connectionPrefix}out",

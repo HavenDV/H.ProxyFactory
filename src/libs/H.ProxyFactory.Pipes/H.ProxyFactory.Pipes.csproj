@@ -15,15 +15,15 @@ $(PACKAGE_RELEASE_NOTES)</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Pipes" Version="1.14.6" />
+    <PackageReference Include="H.Pipes" Version="1.15.10" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' " >
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\H.ProxyFactory\H.ProxyFactory.csproj" />
+    <ProjectReference Include="..\H.ProxyFactory.Remote\H.ProxyFactory.Remote.csproj" />
   </ItemGroup>
 
 </Project>

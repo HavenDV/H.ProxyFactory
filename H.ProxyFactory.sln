@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory.Apps.Wpf", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Ipc.Core", "src\libs\H.Ipc.Core\H.Ipc.Core.csproj", "{52A94338-5BA7-458C-A11F-A3B8F337A95A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.ProxyFactory.Remote", "src\libs\H.ProxyFactory.Remote\H.ProxyFactory.Remote.csproj", "{E771023A-6D02-48D4-84C4-F36A4F73D4F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{52A94338-5BA7-458C-A11F-A3B8F337A95A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A94338-5BA7-458C-A11F-A3B8F337A95A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A94338-5BA7-458C-A11F-A3B8F337A95A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E771023A-6D02-48D4-84C4-F36A4F73D4F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E771023A-6D02-48D4-84C4-F36A4F73D4F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E771023A-6D02-48D4-84C4-F36A4F73D4F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E771023A-6D02-48D4-84C4-F36A4F73D4F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{A1BF7401-D31B-45D8-B3B2-1D7A1A7765D7} = {9CAA231D-7BE1-46C9-ACD6-EB2E569CEBEA}
 		{A3A3539A-7565-492F-8BD0-64EE8D10F98D} = {821DA953-E498-4E88-BD30-DDC3092FD408}
 		{52A94338-5BA7-458C-A11F-A3B8F337A95A} = {6E5BF389-3D3F-4D74-9DD0-3B199CB529C5}
+		{E771023A-6D02-48D4-84C4-F36A4F73D4F0} = {6E5BF389-3D3F-4D74-9DD0-3B199CB529C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1493AEE4-9211-46E9-BFE6-8F629EAC5693}

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\libs\H.ProxyFactory.Remote\H.ProxyFactory.Remote.csproj" />
     <ProjectReference Include="..\..\libs\H.ProxyFactory\H.ProxyFactory.csproj" />
     <ProjectReference Include="..\H.ProxyFactory.TestTypes\H.ProxyFactory.TestTypes.csproj" />
   </ItemGroup>

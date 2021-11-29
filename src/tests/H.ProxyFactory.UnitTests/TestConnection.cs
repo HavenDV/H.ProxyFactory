@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using H.ProxyFactory.Messages;
+using H.Ipc.Messages;
 
 namespace H.ProxyFactory.UnitTests;
 

@@ -30,4 +30,8 @@ $(PACKAGE_RELEASE_NOTES)</Description>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\H.Ipc.Core\H.Ipc.Core.csproj" />
+  </ItemGroup>
+
 </Project>

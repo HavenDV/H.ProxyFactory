@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using H.Ipc.Messages;
 using H.ProxyFactory.Args;
 using H.ProxyFactory.Extensions;
-using H.ProxyFactory.Messages;
 
 namespace H.ProxyFactory;
 
@@ -179,7 +179,7 @@ public class RemoteProxyFactory : IAsyncDisposable
 
         var message = new CreateObjectMessage
         {
-            Guid = guid,
+            Id = guid,
             TypeName = typeName,
             MethodGuid = Guid.NewGuid(),
             MethodName = "Constructor",
@@ -288,7 +288,7 @@ public class RemoteProxyFactory : IAsyncDisposable
         var value = await Connection.ReceiveAsync<object?>($"{message.ConnectionPrefix}out", token).ConfigureAwait(false);
         if (value is CreateObjectMessage createObjectMessage)
         {
-            var guid = createObjectMessage.Guid ?? throw new InvalidOperationException("Guid is null");
+            var guid = createObjectMessage.Id ?? throw new InvalidOperationException("Guid is null");
 
             return GetReturnObject(methodInfo.ReturnType,
                 actualType =>

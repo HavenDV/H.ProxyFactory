@@ -1,4 +1,4 @@
-﻿namespace H.ProxyFactory.Messages;
+﻿namespace H.Ipc.Messages;
 
 /// <summary>
 /// 
@@ -14,7 +14,7 @@ public class CreateObjectMessage : RunMethodMessage
     /// <summary>
     /// 
     /// </summary>
-    public Guid? Guid { get; set; }
+    public Guid? Id { get; set; }
 
     /// <summary>
     /// 

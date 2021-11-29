@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
+using H.Ipc.Messages;
 using H.ProxyFactory.Extensions;
-using H.ProxyFactory.Messages;
 
 namespace H.ProxyFactory;
 
@@ -161,7 +161,7 @@ public class RemoteProxyServer : IAsyncDisposable
 
                 case CreateObjectMessage o:
                     {
-                        var guid = o.Guid ?? throw new ArgumentNullException(nameof(o.Guid));
+                        var guid = o.Id ?? throw new ArgumentNullException(nameof(o.Id));
                         var typeName = o.TypeName ?? throw new ArgumentNullException(nameof(o.TypeName));
                         var connectionPrefix = o.ConnectionPrefix ?? throw new ArgumentNullException(nameof(o.ConnectionPrefix));
 
@@ -396,7 +396,7 @@ public class RemoteProxyServer : IAsyncDisposable
 
             await Connection.SendAsync($"{connectionPrefix}out", new CreateObjectMessage
             {
-                Guid = guid,
+                Id = guid,
             }, cancellationTokenSource.Token).ConfigureAwait(false);
         }
         catch (Exception exception)

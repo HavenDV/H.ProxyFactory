@@ -1,4 +1,4 @@
-﻿namespace H.ProxyFactory.Messages;
+﻿namespace H.Ipc.Messages;
 
 /// <summary>
 /// 

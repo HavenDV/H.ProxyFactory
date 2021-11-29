@@ -1,6 +1,6 @@
 ﻿using H.Pipes;
 using H.Pipes.Extensions;
-using H.ProxyFactory.Messages;
+using H.Ipc.Messages;
 
 namespace H.ProxyFactory;
 

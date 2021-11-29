@@ -26,7 +26,7 @@ $(PACKAGE_RELEASE_NOTES)</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\H.Ipc.Core\H.Ipc.Core.csproj" />
+    <ProjectReference Include="..\H.ProxyFactory.Remote.Messages\H.ProxyFactory.Remote.Messages.csproj" />
     <ProjectReference Include="..\H.ProxyFactory\H.ProxyFactory.csproj" />
   </ItemGroup>
 

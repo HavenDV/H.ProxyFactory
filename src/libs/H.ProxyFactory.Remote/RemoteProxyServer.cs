@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
-using H.Ipc.Messages;
+using H.ProxyFactory.Remote.Messages;
 using H.ProxyFactory.Extensions;
 
 namespace H.ProxyFactory;

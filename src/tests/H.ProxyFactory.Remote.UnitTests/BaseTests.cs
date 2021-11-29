@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using H.Ipc.Messages;
+using H.ProxyFactory.Remote.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.ProxyFactory.UnitTests;

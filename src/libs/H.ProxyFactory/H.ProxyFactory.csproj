@@ -14,7 +14,7 @@ $(PACKAGE_RELEASE_NOTES)</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Remove="System.Net.Http"/>
+    <Using Remove="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,10 +23,6 @@ $(PACKAGE_RELEASE_NOTES)</Description>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\H.Ipc.Core\H.Ipc.Core.csproj" />
   </ItemGroup>
 
 </Project>

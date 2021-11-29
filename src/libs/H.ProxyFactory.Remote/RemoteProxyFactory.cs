@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using H.Ipc.Messages;
+using H.ProxyFactory.Remote.Messages;
 using H.ProxyFactory.Args;
 using H.ProxyFactory.Extensions;
 

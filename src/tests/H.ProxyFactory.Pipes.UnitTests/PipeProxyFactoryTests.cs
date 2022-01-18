@@ -1,7 +1,5 @@
-﻿using H.Core;
-using H.ProxyFactory.Pipes.UnitTests.Extensions;
+﻿using H.ProxyFactory.Pipes.UnitTests.Extensions;
 using H.ProxyFactory.TestTypes;
-using H.Recorders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.ProxyFactory.Pipes.UnitTests;
@@ -38,36 +36,6 @@ public class PipeProxyFactoryTests
                     return Task.CompletedTask;
                 }, nameof(eventClass.Event1), cancellationToken);
                 Assert.AreEqual(777, event1Value);
-            },
-            cancellationTokenSource.Token);
-    }
-
-    [TestMethod]
-    public async Task RecorderTest()
-    {
-        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
-
-        await BaseTests.BaseInstanceTestAsync<IRecorder>(
-            GetFullName(typeof(NAudioRecorder)),
-            async (instance, cancellationToken) =>
-            {
-                instance.RawDataReceived += (_, args) =>
-                {
-                    Console.WriteLine(
-                        $"{nameof(instance.RawDataReceived)}: {args.RawData?.Count ?? 0}, {args.WavData?.Count ?? 0}");
-                };
-                await instance.InitializeAsync(cancellationToken);
-
-                if (!NAudioRecorder.GetAvailableDevices().Any())
-                {
-                    return;
-                }
-
-                await instance.StartAsync(cancellationToken);
-
-                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-
-                await instance.StopAsync(cancellationToken);
             },
             cancellationTokenSource.Token);
     }

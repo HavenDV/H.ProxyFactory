@@ -15,7 +15,7 @@ $(PACKAGE_RELEASE_NOTES)</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Pipes" Version="1.15.10" />
+    <PackageReference Include="H.Pipes" Version="2.0.23" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net4.6.1' ">
